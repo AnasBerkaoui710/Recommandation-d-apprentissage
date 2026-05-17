@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Portal - AI Recommender</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="portal-container">
+        <div class="portal-box">
+            <!-- Header logo -->
+            <div class="portal-header">
+                <div class="portal-logo">🚀 AI Recommender</div>
+                <div class="portal-subtitle">Access your personalized educational dashboard</div>
+            </div>
+
+            <!-- Portal Tabs -->
+            <div class="portal-tabs">
+                <div id="tab-login" class="portal-tab active">Log In</div>
+                <div id="tab-register" class="portal-tab">Register</div>
+            </div>
+
+            <!-- Login Form Card -->
+            <div class="glass-card">
+                <!-- Log In Form -->
+                <form id="form-login" class="auth-form active" onsubmit="handleLogin(event)">
+                    <div class="input-group">
+                        <label class="input-label" for="login-email">Email Address</label>
+                        <input type="email" id="login-email" class="input-field" placeholder="name@domain.com" required autocomplete="email">
+                    </div>
+                    <div class="input-group" style="margin-bottom: 1.5rem;">
+                        <label class="input-label" for="login-password">Password</label>
+                        <input type="password" id="login-password" class="input-field" placeholder="••••••••" required autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In to Dashboard</button>
+                    <div id="login-message" style="margin-top: 1rem; font-size: 0.9rem; text-align: center; font-weight: 500;"></div>
+                </form>
+
+                <!-- Register Form -->
+                <form id="form-register" class="auth-form" onsubmit="handleRegister(event)">
+                    <div class="input-group">
+                        <label class="input-label" for="reg-name">Full Name</label>
+                        <input type="text" id="reg-name" class="input-field" placeholder="Anas" required autocomplete="name">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label" for="reg-email">Email Address</label>
+                        <input type="email" id="reg-email" class="input-field" placeholder="anas@domain.com" required autocomplete="email">
+                    </div>
+                    <div class="input-group" style="margin-bottom: 1.5rem;">
+                        <label class="input-label" for="reg-password">Password</label>
+                        <input type="password" id="reg-password" class="input-field" placeholder="••••••••" required autocomplete="new-password">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Create Free Account</button>
+                    <div id="reg-message" style="margin-top: 1rem; font-size: 0.9rem; text-align: center; font-weight: 500;"></div>
+                </form>
+            </div>
+            
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <a href="index.html" style="font-size: 0.9rem; color: var(--text-muted);">&larr; Back to Landing Page</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client-Side Controller -->
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Learning Dashboard - AI Recommender</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Chart.js CDN for interactive visual analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                🚀 <span>AI Recommender</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="menu-item active" onclick="switchTab('dashboard')">
+                    <span class="icon">📊</span> <span>Dashboard</span>
+                </li>
+                <li class="menu-item" onclick="switchTab('quizzes')">
+                    <span class="icon">📝</span> <span>Quizzes</span>
+                </li>
+                <li class="menu-item" onclick="switchTab('recommendations')">
+                    <span class="icon">🎯</span> <span>Recommendations</span>
+                </li>
+                <li class="menu-item" onclick="switchTab('analytics')">
+                    <span class="icon">📈</span> <span>Performance Analytics</span>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <li class="menu-item" onclick="logout()" style="color: var(--accent-danger);">
+                    <span class="icon">🚪</span> <span>Log Out</span>
+                </li>
+            </div>
+        </aside>
+
+        <!-- Main Workspace Workspace -->
+        <main class="workspace">
+            <!-- Header bar -->
+            <header class="workspace-header">
+                <div class="welcome-section">
+                    <h1>Welcome Back, <span id="user-display-name">Student</span>!</h1>
+                    <p>Track your ML performance and custom recommendations below.</p>
+                </div>
+                <div>
+                    <button class="btn btn-secondary" onclick="switchTab('quizzes')">✍️ Take a Quiz</button>
+                </div>
+            </header>
+
+            <!-- ===============================================================
+                 SECTION 1: DASHBOARD HOME VIEW
+                 =============================================================== -->
+            <section id="view-dashboard" class="view-section active">
+                <!-- Statistics cards -->
+                <div class="stats-grid">
+                    <div class="glass-card stat-card">
+                        <div class="stat-icon primary">📝</div>
+                        <div class="stat-info">
+                            <h4>Quizzes Taken</h4>
+                            <p id="stat-total-quizzes">0</p>
+                        </div>
+                    </div>
+                    <div class="glass-card stat-card">
+                        <div class="stat-icon secondary">🎯</div>
+                        <div class="stat-info">
+                            <h4>Average Score</h4>
+                            <p id="stat-avg-score">0%</p>
+                        </div>
+                    </div>
+                    <div class="glass-card stat-card">
+                        <div class="stat-icon success">⚠️</div>
+                        <div class="stat-info">
+                            <h4>Avg Mistakes</h4>
+                            <p id="stat-avg-mistakes">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Overall ML Standing Standing -->
+                <div class="overall-standing">
+                    <div class="glass-card" style="display: flex; flex-direction: column; justify-content: center;">
+                        <h3 style="color: white; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <span>🧠</span> Overall Academic Standing (ML Predicted)
+                        </h3>
+                        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">
+                            Our RandomForest Classifier constantly updates your overall standing based on your accumulated scores and mistake averages.
+                        </p>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <span style="font-weight: 600; color: white;">Current predicted level:</span>
+                            <span id="stat-overall-level" class="badge badge-medium">N/A</span>
+                        </div>
+                        <div class="level-bar">
+                            <div id="level-progress-bar" class="level-fill medium"></div>
+                        </div>
+                    </div>
+
+                    <!-- Weakest Chapter Alert Card -->
+                    <div class="glass-card" style="border-color: rgba(255, 23, 68, 0.2); background: rgba(255, 23, 68, 0.02);">
+                        <h3 style="color: white; margin-bottom: 0.5rem;">Weakest Chapter Alert</h3>
+                        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">
+                            The recommendation engine tracks your scores across chapters to highlight where you need conceptual revision.
+                        </p>
+                        <div id="weakest-chapter-alert" style="display: none;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent-danger); margin-bottom: 0.5rem;" id="weak-chapter-name">
+                                Chapter Name
+                            </div>
+                            <span class="badge badge-weak" style="cursor: pointer;" onclick="switchTab('recommendations')">
+                                View recommendations &rarr;
+                            </span>
+                        </div>
+                        <div id="no-weak-chapter" style="color: var(--accent-success); font-weight: 600; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem;">
+                            ✅ Keep it up! No critical weaknesses detected.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explanation Box -->
+                <div class="glass-card" style="margin-bottom: 2rem;">
+                    <h3 style="color: white; margin-bottom: 0.75rem;">How the AI Recommendation Engine Works</h3>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 0.5rem;">
+                        1. <strong>ML Level Profiling:</strong> When you complete quizzes, your exact score and mistake counts are inputted into a <strong>RandomForest Classifier</strong> model (trained using Scikit-Learn) to determine your performance bracket: <em>Weak</em>, <em>Medium</em>, or <em>Strong</em>.
+                    </p>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">
+                        2. <strong>Resource Mapping:</strong> The system automatically queries the MySQL database for educational content (Worksheets, Videos, Lectures) mapped to your weak areas and difficulty levels, offering an immediate learning path.
+                    </p>
+                </div>
+            </section>
+
+            <!-- ===============================================================
+                 SECTION 2: QUIZZES SELECTION VIEW
+                 =============================================================== -->
+            <section id="view-quizzes" class="view-section">
+                <div style="margin-bottom: 2rem;">
+                    <h2 style="color: white; margin-bottom: 0.5rem;">Available Quizzes</h2>
+                    <p style="color: var(--text-muted);">Choose a quiz to test your mastery and fire recommendations.</p>
+                </div>
+                <div id="quizzes-container" class="quizzes-grid">
+                    <!-- Dynamic Quizzes Cards will render here -->
+                </div>
+            </section>
+
+            <!-- ===============================================================
+                 SECTION 3: RECOMMENDATIONS VIEW
+                 =============================================================== -->
+            <section id="view-recommendations" class="view-section">
+                <div style="margin-bottom: 2rem;">
+                    <h2 style="color: white; margin-bottom: 0.5rem;" id="recommendation-level-title">Personalized Recommendations</h2>
+                    <p style="color: var(--text-muted);">Handpicked study courses, exercises, and videos generated dynamically by the AI.</p>
+                </div>
+                <div id="recommendations-container" class="resources-grid">
+                    <div class="glass-card" style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">
+                        Take a quiz first or log details to load personalized recommendations here.
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===============================================================
+                 SECTION 4: PERFORMANCE ANALYTICS VIEW
+                 =============================================================== -->
+            <section id="view-analytics" class="view-section">
+                <div style="margin-bottom: 2rem;">
+                    <h2 style="color: white; margin-bottom: 0.5rem;">Performance Analytics</h2>
+                    <p style="color: var(--text-muted);">Detailed charts plotting your learning progress over time.</p>
+                </div>
+                <div class="charts-grid">
+                    <div class="glass-card">
+                        <h3 style="color: white; margin-bottom: 1.5rem;">Quiz Progress History</h3>
+                        <div class="chart-container">
+                            <canvas id="progressChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <h3 style="color: white; margin-bottom: 1.5rem;">Chapter Performance</h3>
+                        <div class="chart-container">
+                            <canvas id="chapterChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- =======================================================================
+         INTERACTIVE QUIZ MODAL DIALOGUE
+         ======================================================================= -->
+    <div id="quiz-modal" class="modal">
+        <div class="glass-card modal-content">
+            <!-- Quiz taker View -->
+            <div id="quiz-question-view">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-glass);">
+                    <h3 style="color: white;">Quiz in Progress</h3>
+                    <span id="quiz-progress" class="quiz-progress-text">Question 1 of 5</span>
+                </div>
+                <div id="quiz-question-box" class="quiz-question-box">
+                    <!-- Dynamic Question and options rendered here -->
+                </div>
+                <div class="quiz-footer">
+                    <button class="btn btn-secondary" onclick="closeQuizModal()" style="border-color: var(--accent-danger); color: var(--accent-danger);">Cancel</button>
+                    <button id="quiz-next-btn" class="btn btn-primary" onclick="nextQuestion()">Next Question</button>
+                </div>
+            </div>
+
+            <!-- Quiz completed / results View -->
+            <div id="quiz-result-view" class="result-alert" style="display: none;">
+                <div style="font-size: 3.5rem; margin-bottom: 1rem;">🏆</div>
+                <div class="result-title">Quiz Completed successfully!</div>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">Here is your performance breakdown calculated by the system:</p>
+                
+                <div style="display: flex; gap: 2.5rem; margin-bottom: 2rem;">
+                    <div>
+                        <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.25rem;">Final Score</div>
+                        <div id="res-score" class="result-score">0%</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.25rem;">Mistakes</div>
+                        <div id="res-mistakes" style="font-size: 3rem; font-weight: 800; color: var(--accent-danger);">0</div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 2.5rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass); padding: 1rem 2rem; border-radius: var(--radius-md);">
+                    <span style="font-weight: 600; color: white; margin-right: 0.5rem;">ML Predicted Level:</span>
+                    <span id="res-ml-level" class="badge badge-medium">Medium</span>
+                </div>
+
+                <button class="btn btn-primary" onclick="closeQuizModal()" style="width: 100%;">Get Recommendations &rarr;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client-Side Controller -->
+    <script src="js/app.js"></script>
+</body>
+</html>
